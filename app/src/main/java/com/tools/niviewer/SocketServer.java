@@ -70,8 +70,6 @@ public class SocketServer extends Thread {
     }
 
 
-
-
     private void initializeSocket() {
         try {
             if(socket == null){

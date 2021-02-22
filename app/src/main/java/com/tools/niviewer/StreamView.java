@@ -288,29 +288,32 @@ public class StreamView extends RelativeLayout {
 							OpenNI.waitForAnyStream(streams, 100);
 							frame = mStream.readFrame();
 
-							ByteBuffer frameByteBuffer = frame.getData();
-
-							int type = mStream.getSensorType() == SensorType.COLOR ? 0 : 1;
-							int index = frame.getFrameIndex();
-							int width = frame.getWidth();
-							int height = frame.getHeight();
-							int length = frameByteBuffer.capacity();
-
-							ByteBuffer headerByteBuffer = ByteBuffer.allocate(20 + frameByteBuffer.remaining());
-							headerByteBuffer.putInt(type);
-							headerByteBuffer.putInt(index);
-							headerByteBuffer.putInt(width);
-							headerByteBuffer.putInt(height);
-							headerByteBuffer.putInt(length);
-							headerByteBuffer.put(frameByteBuffer);
-
-							headerByteBuffer.rewind();
-
-							byte[] headerByteArray = new byte[headerByteBuffer.capacity()];
-							headerByteBuffer.get(headerByteArray, 0, headerByteArray.length);
-
 							if(transmit)
 							{
+								ByteBuffer frameByteBuffer = frame.getData();
+
+								int type = mStream.getSensorType() == SensorType.COLOR ? 0 : 1;
+								int index = frame.getFrameIndex();
+								int width = frame.getWidth();
+								int height = frame.getHeight();
+								int length = frameByteBuffer.capacity();
+
+								byte[] frameData = CompressionUtils.compress(frameByteBuffer);
+
+								ByteBuffer headerByteBuffer = ByteBuffer.allocate(24 + frameData.length);
+								headerByteBuffer.putInt(type);
+								headerByteBuffer.putInt(index);
+								headerByteBuffer.putInt(width);
+								headerByteBuffer.putInt(height);
+								headerByteBuffer.putInt(length);
+								headerByteBuffer.putInt(frameData.length);
+								headerByteBuffer.put(frameData);
+
+								headerByteBuffer.rewind();
+
+								byte[] headerByteArray = new byte[headerByteBuffer.capacity()];
+								headerByteBuffer.get(headerByteArray, 0, headerByteArray.length);
+
 								if(mStream.getSensorType() == SensorType.COLOR){
 									socketServer.offerColorFrame(headerByteArray);
 								}
