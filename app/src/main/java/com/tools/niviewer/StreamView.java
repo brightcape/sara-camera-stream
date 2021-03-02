@@ -190,8 +190,8 @@ public class StreamView extends RelativeLayout {
 			mStreamVideoModes = mStream.getSensorInfo().getSupportedVideoModes();
 			for (int i = 0; i < mStreamVideoModes.size(); ++i) {
 				VideoMode mode = mStreamVideoModes.get(i);
-				if(mode.getResolutionX() == 320 && mode.getResolutionY() == 240 && mode.getFps() == 30) {
-					if(sensor == SensorType.DEPTH || (sensor == SensorType.COLOR && mode.getPixelFormat() == PixelFormat.RGB888))
+				if(mode.getResolutionX() == 640 && mode.getResolutionY() == 480 && mode.getFps() == 30) {
+					if((sensor == SensorType.DEPTH && mode.getPixelFormat() == PixelFormat.DEPTH_1_MM) || (sensor == SensorType.COLOR && mode.getPixelFormat() == PixelFormat.RGB888))
 					{
 						currentMode = mode;
 					}

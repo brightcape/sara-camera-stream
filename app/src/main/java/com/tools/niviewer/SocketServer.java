@@ -78,7 +78,7 @@ public class SocketServer extends Thread {
 
             if(socket.isClosed() || !socket.isConnected())
             {
-                socket.connect(new InetSocketAddress("192.168.26.64", 5000), 5000);
+                socket.connect(new InetSocketAddress("192.168.27.64", 5000), 5000);
             }
 
             socket.setSendBufferSize(1310740);
